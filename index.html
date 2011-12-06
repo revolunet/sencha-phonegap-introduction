@@ -5,6 +5,7 @@
 
 <script type="text/javascript" src="syntax/shCore.js"></script>
 <script type="text/javascript" src="syntax/shBrushJScript.js"></script>
+<script type="text/javascript" src="syntax/shBrushJava.js"></script>
 <link type="text/css" rel="stylesheet" href="syntax/shCoreDefault.css"/>
 
 <!-- Your Slides -->
@@ -200,7 +201,7 @@
         <h2>New in Sencha Touch <span class='pink'>2</span></h2>
         <br/>
         <h3>Better global performance</h3>
-        <h3>Better Android performance</h3>
+        <h3>Better <span class='pink'>Android</span> performance</h3>
         <h3>Integrated Android+iOS packaging</h3>
         <h3>ExtJs classes and MVC</h3>
     </section>
@@ -517,7 +518,13 @@
         
         <h1><span class='pink'>Who</span> is CallBack ?</h1>
         <br/>
-        <h3>TODO</h3>
+        <h3>Developed by Nitobi software since 2009</h3>
+        <br/>
+        <h3>Acquired by <span class='pink'>Adobe</span> in November 2011</h3>
+        <h4 style=''>(bundled in Dreamweaver CS5)</h4>
+        <div style='text-align:center'>
+            <img style='margin-top:20px'  src="img/Adobelogo.png"/>
+        </div>
     </section>
 
 
@@ -564,9 +571,76 @@
      
 
     <section>
-        <br/>
+    
         <h3><span class='pink'>Extending</span> CallBack</h3>
-        <h3>TODO</h3>
+        <br/><br/>
+        <h4><span class='pink'>1)</span> Create the native code (Java, iOS...)</h4>
+        <br/>
+        <h4><span class='pink'>2)</span> Create the javascript API for the native code</h4>
+        <br/>
+        <h4><span class='pink'>3)</span> Call your javascript API from your web app</h4>
+    
+    </section>
+
+    <section>
+    
+        <h3><span class='pink'>Extending</span> CallBack (java)</h3>
+
+        <pre class="brush: java;" style="font-size: .2em">
+
+
+import com.phonegap.api.Plugin;
+import com.phonegap.api.PluginResult;
+
+public class WebIntent extends Plugin {
+    @Override
+    public PluginResult execute(String action, JSONArray args, String callbackId) {
+            // Parse the arguments
+            JSONObject obj = args.getJSONObject(0);
+            String type = obj.has("type") ? obj.getString("type") : null;
+            Uri uri = obj.has("url") ? Uri.parse(obj.getString("url")) : null;
+
+            // open the intent, send result to JS
+            openActivity(uri, type);
+            return new PluginResult(PluginResult.Status.OK);
+    }
+
+    void openActivity(Uri uri, String type) {
+        Intent i = (uri != null ? new Intent(action, uri) : new Intent(action));
+        if (type != null) {
+            i.setDataAndType(uri, type);
+        }
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        this.ctx.startActivity(i);
+    }
+}
+        </pre>
+
+    </section>
+
+    <section>
+    
+        <h3><span class='pink'>Extending</span> CallBack (javascript)</h3>
+
+<br>
+        <pre class="brush: js;" style="font-size: .2em">
+
+var WebIntent = function() {};
+
+WebIntent.prototype.openActivity = function(params, success, fail) {
+    return PhoneGap.exec(function(args) {
+        success(args);
+    }, function(args) {
+        fail(args);
+    }, 'WebIntent', 'openActivity', [params]);
+};
+
+//
+// example call 
+// WebIntent.openActivity({action: WebIntent.ACTION_VIEW, url: 'geo:0,0?q=Disneyland, Parid' }, successCallback, errorCallback);
+//
+        </pre>
+
     </section>
 
     <section>
@@ -580,13 +654,22 @@
     </section>
 
     <section>
-        <br/>
+     
         <h1>Useful pointers</h1>
-        <h3>TODO</h3>
+        <br/>
+        <h4>sencha.com</h4>
+        <br>
+        <h4>    http://phonegap.com/</h4>
+        <br>
+        <h4 style='font-size:30px'>
+        http://www.markus-falk.com/mobile-frameworks-comparison-chart/
+        </h4>
+        <br>
+        <h4>    http://caniuse.com/</h4>
     </section>
 
     <section>
-        <br/>
+       
         <h1 class='pink'>Questions ?</h1>
         <br/>
         <center>
