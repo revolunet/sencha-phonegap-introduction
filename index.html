@@ -3,6 +3,10 @@
 <meta charset="utf-8">
 <title>Sencha+Phonegap introduction</title>
 
+<script type="text/javascript" src="syntax/shCore.js"></script>
+<script type="text/javascript" src="syntax/shBrushJScript.js"></script>
+<link type="text/css" rel="stylesheet" href="syntax/shCoreDefault.css"/>
+
 <!-- Your Slides -->
 <!-- One section is one slide -->
 
@@ -166,7 +170,7 @@
         <h4>List, toolbar, floating panels...</h4>
         <h3 class="pink">Layouts</h3>
         <h4>CSS flexible box layout</h4>
-        <h4>Absolute component position</h4>
+        <h4>Absolute component position + scrolling</h4>
         <h3 class="pink">Theming</h3>
         <h4>Sass / Compass + Sencha variables and mixins</h4>
     </section>
@@ -236,11 +240,99 @@
     </section> 
     
     <section>
-        <h2>Sencha Touch code sample</h2>
+        <h3>Code sample (setup)</h3>
         
          <div class="minicode">
-            <pre class="brush: js; ">
-                        [todo]
+            <pre class="brush: js;" style="font-size: .3em">
+        Ext.setup({
+            onReady: function() { // DOM is ready
+                new Ext.Application({ // Define our application
+                    name: 'Quizz', // Application namespace
+                    launch: function () {
+                        Quizz.views.home = new Ext.Panel({...});
+                        Quizz.views.questions = new Ext.Carousel({...});
+
+                        Quizz.viewport = new Ext.Panel({ // Main component
+                            fullscreen: true,
+                            items: [
+                                Quizz.views.home,
+                                Quizz.views.questions
+                            ]
+                        });
+
+                    }
+                });
+            }
+        });</pre>
+        </div>
+    </section>
+
+
+    <section>
+        <h3>Code sample (Home view)</h3>
+        
+         <div class="minicode">
+            <pre class="brush: js;" style="font-size: .3em">
+                Quizz.views.home = new Ext.Panel({
+                    dockedItems: [{ // Absolute positioned components
+                        dock: 'top',
+                        xtype: 'toolbar', // Equivalent to: new Ext.Toolbar({...})
+                        title: 'Supa Quizz'
+                    }],
+                    items: [{
+                        xtype: 'container', // Lighter than Ext.Panel
+                        html: '<div class="home"><div class="title">welcome to supa quizz</div><div class="logo"></div></div>'
+                    }, {
+                        xtype: 'button',
+                        text: 'Start now!',
+                        handler: function () { // Button action: show questions
+                            QuizzApp.viewport.setActiveItem(
+                                'questions', // View ID
+                                {type: 'slide', direction: 'left'} // Animated transition
+                            );
+                        }
+                    })]
+                });</pre>
+        </div>
+    </section>
+
+    <section>
+        <h3>Code sample (Carousel view)</h3>
+        
+         <div class="minicode">
+            <pre class="brush: js;" style="font-size: .3em">
+                QuestionStore = new Ext.Store({...}); // Store remote data
+
+                Quizz.views.questions = new Ext.Carousel({
+                    id: 'questions',
+                    direction: 'horizontal', // Slide horizontaly
+                    cardTpl: new Ext.XTemplate( // Items HTML template
+                        '<div class="question">',
+                            '<tpl for=".">',
+                                '<h2>{text}</h2>',
+                                '<div style="background-image:url({image});"></div>',
+                            '</tpl>',
+                        '</div>'
+                    ),
+                    listeners: { // Listen to events
+                        beforeactivate: function() {
+                            QuestionStore.load(function(store, records) { // Load remote data
+                                Quizz.views.questions.update(records); // Apply data
+                            });
+                        }
+                    }
+                });</pre>
+        </div>
+    </section>
+
+    <!-- <section>
+        <h2>Sencha Touch code sample</h2>
+        <h3>Views</h3>
+        
+         <div class="minicode">
+            <pre class="brush: js;" style="font-sizex: 1.2em !important">
+
+                        
                 var App = new Ext.Application({
                     name : 'QuizzApp',
                     launch : function () {
@@ -293,8 +385,7 @@
             </pre>
         </div>
         
-    </section>    
-
+    </section> -->
 
 
     <!--
@@ -328,7 +419,7 @@
 
     <section>
         <h2>My Web App</h2>
-        <br/><br/><br/>
+        <br />
         <h3 class=''>How to access <span class='pink'>device hardware</span> ?</h3>
 
         <br/>
@@ -336,7 +427,6 @@
     </section>
 
     <section>
-        <br/>
         <h1>Phonegap to the rescue !</h1>
         <center>
           <img src="img/phonegap_logo.png"/>
@@ -345,8 +435,7 @@
 
 
    <section>
-        <br/>
-        <h3>native VS web apps VS hybrid</h3>
+        <h3>Native <span class="pink">VS</span> Web Apps <span class="pink">VS</span> Hybrid</h3>
         <br/>
         <center>
         <table class="compare" width="700" align="center"   >
@@ -611,7 +700,7 @@
       
       div.minicode,
       div.minicode * {
-        font-size:0.82em !important;
+        font-size:0.9em !important;
       }
       
       table.compare td.yes {
@@ -688,6 +777,7 @@ li {
 </style>
 
 <script>
+
   var Dz = {
     remoteWindows: [],
     idx: -1,
@@ -705,7 +795,8 @@ li {
     this.onhashchange();
     this.setupTouchEvents();
     this.onresize();
-  }
+    SyntaxHighlighter.highlight();
+}
   
   Dz.setupParams = function() {
     var p = window.location.search.substr(1).split('&');
