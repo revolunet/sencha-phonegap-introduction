@@ -14,7 +14,7 @@ The slides use [Paul Rouget][3] DZslides project and [Alex Gorbatchev][4] syntax
 This talk is part based on my past [ParisJS 8][5] sencha introduction talk.
 
  [1]: http://www.paug.fr
- [2]: http://revolunet.com/static/parisjs8
+ [2]: http://revolunet.com/static/paug2011
  [3]: https://github.com/paulrouget/dzslides
  [4]: https://github.com/alexgorbatchev/SyntaxHighlighter
  [5]: http://parisjs.org
